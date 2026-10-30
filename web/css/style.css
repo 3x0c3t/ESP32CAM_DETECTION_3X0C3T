@@ -412,3 +412,25 @@ footer {
         flex-direction: column;
     }
 }
+
+
+/* Réglage de puissance du flash */
+.flash-slider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 150px;
+}
+
+#flash-level {
+    width: 110px;
+    accent-color: #f59e0b;
+    cursor: pointer;
+}
+
+#flash-value {
+    min-width: 35px;
+    color: var(--text);
+    font-size: 12px;
+    font-weight: bold;
+}

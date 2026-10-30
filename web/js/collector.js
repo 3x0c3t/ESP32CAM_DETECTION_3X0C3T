@@ -106,6 +106,26 @@ document.getElementById("flash-off").addEventListener(
     () => flashCommand("off")
 );
 
+const flashLevel = document.getElementById("flash-level");
+const flashValue = document.getElementById("flash-value");
+
+flashLevel.addEventListener("input", () => {
+    flashValue.textContent = flashLevel.value + " %";
+});
+
+flashLevel.addEventListener("change", async () => {
+    try {
+        await api("/api/flash", {
+            method: "POST",
+            body: JSON.stringify({ percent: Number(flashLevel.value) })
+        });
+        await refreshStatus();
+    } catch (error) {
+        document.getElementById("flash-status").textContent =
+            "FLASH : " + error.message;
+    }
+});
+
 
 /* DATASET */
 
@@ -195,11 +215,17 @@ async function refreshStatus() {
                 ? "FLASH : " + (data.flash_on ? "ALLUMÉ" : "ÉTEINT")
                 : "FLASH : NON DISPONIBLE";
 
+        if (document.activeElement !== flashLevel) {
+            flashLevel.value = data.flash_percent || 0;
+            flashValue.textContent = flashLevel.value + " %";
+        }
+        flashLevel.disabled = !data.flash_available;
+
         document.getElementById("flash-on").disabled =
-            !data.flash_available || data.flash_on;
+            !data.flash_available;
 
         document.getElementById("flash-off").disabled =
-            !data.flash_available || !data.flash_on;
+            !data.flash_available;
 
         updateDataset(data.categories || {});
 

@@ -1,4 +1,6 @@
 import json
+import urllib.request
+from urllib.parse import urlsplit
 
 from pathlib import Path
 from flask import (
@@ -21,7 +23,7 @@ WEB_DIR = ROOT / "web"
 CONFIG_FILE = ROOT / "config" / "config.json"
 
 DEFAULT_CONFIG = {
-    "camera_url": "http://192.168.43.128:81/stream"
+    "camera_url": "http://192.168.1.100:81/stream"
 }
 
 if CONFIG_FILE.exists():
@@ -31,6 +33,29 @@ else:
     CONFIG = DEFAULT_CONFIG
 
 CAMERA = CameraStream(CONFIG["camera_url"])
+
+flash_percent = 0
+flash_available = True
+
+
+def apply_flash(percent):
+    global flash_percent, flash_available
+
+    camera_url = urlsplit(CONFIG["camera_url"])
+    if not camera_url.hostname:
+        raise ValueError("Adresse caméra invalide.")
+
+    control_url = (
+        f"http://{camera_url.hostname}:80/control"
+        f"?var=led_intensity&val={round(percent * 255 / 100)}"
+    )
+
+    with urllib.request.urlopen(control_url, timeout=4) as response:
+        if response.status != 200:
+            raise RuntimeError("Réponse invalide de l'ESP32-CAM.")
+
+    flash_percent = percent
+    flash_available = True
 
 app = Flask(__name__)
 
@@ -64,8 +89,9 @@ def status():
         "camera_active": CAMERA.is_active(),
         "camera_connected": CAMERA.is_connected(),
         "camera_url": CONFIG["camera_url"],
-        "flash_available": False,
-        "flash_on": False,
+        "flash_available": flash_available,
+        "flash_on": flash_percent > 0,
+        "flash_percent": flash_percent,
         "categories": category_counts()
     })
 
@@ -108,22 +134,43 @@ def camera_off():
     }), 503
 
 
+def flash_response(percent):
+    global flash_available
+
+    try:
+        percent = max(0, min(100, int(round(float(percent)))))
+        apply_flash(percent)
+        return jsonify({
+            "success": True,
+            "flash_available": True,
+            "flash_percent": flash_percent,
+            "flash_on": flash_percent > 0
+        })
+    except Exception as error:
+        flash_available = False
+        return jsonify({
+            "success": False,
+            "flash_available": False,
+            "error": f"Commande flash impossible : {error}"
+        }), 502
+
+
+@app.route("/api/flash", methods=["POST"])
+def flash_set():
+    data = request.get_json(silent=True) or {}
+    if "percent" not in data:
+        return jsonify({"success": False, "error": "Pourcentage manquant."}), 400
+    return flash_response(data["percent"])
+
+
 @app.route("/api/flash/on", methods=["POST"])
 def flash_on():
-    return jsonify({
-        "success": False,
-        "flash_available": False,
-        "error": "Flash indisponible : firmware non configuré."
-    }), 503
+    return flash_response(100)
 
 
 @app.route("/api/flash/off", methods=["POST"])
 def flash_off():
-    return jsonify({
-        "success": False,
-        "flash_available": False,
-        "error": "Flash indisponible : firmware non configuré."
-    }), 503
+    return flash_response(0)
 
 
 @app.route("/api/categories", methods=["GET"])
