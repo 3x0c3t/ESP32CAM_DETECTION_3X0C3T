@@ -1,0 +1,414 @@
+:root {
+    --background: #0b1120;
+    --panel: #151f30;
+    --panel-light: #1d2a3d;
+    --border: #29384d;
+    --text: #e5eaf2;
+    --muted: #8c9bb0;
+    --blue: #2563eb;
+    --green: #059669;
+    --red: #dc2626;
+    --yellow: #d97706;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+}
+
+
+/* HEADER */
+
+.header {
+    min-height: 58px;
+    padding: 10px 4%;
+    background: #050a14;
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.brand {
+    color: #60a5fa;
+    font-size: 21px;
+    font-weight: 900;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.project-title {
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    flex: 1;
+}
+
+.repo {
+    color: #a5b4fc;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.repo:hover,
+.brand:hover {
+    color: white;
+}
+
+.version {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+/* MAIN */
+
+main {
+    width: min(1100px, 94%);
+    margin: 25px auto;
+}
+
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 16px;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+h3 {
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+
+/* STATUS */
+
+.status {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+.online {
+    color: #34d399;
+    background: #064e3b;
+}
+
+.offline {
+    color: #f87171;
+    background: #450a0a;
+}
+
+
+/* CAMERA */
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    min-height: 250px;
+    background: #02050a;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#camera {
+    display: none;
+    width: 100%;
+    max-height: 550px;
+    object-fit: contain;
+}
+
+#camera-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#camera-placeholder small {
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.camera-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+
+/* BUTTONS */
+
+button {
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 15px;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+button:hover:not(:disabled) {
+    opacity: 0.8;
+}
+
+button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn-success {
+    background: var(--green);
+}
+
+.btn-danger {
+    background: var(--red);
+}
+
+.btn-primary {
+    background: var(--blue);
+}
+
+.btn-warning {
+    background: var(--yellow);
+}
+
+.btn-secondary {
+    background: #475569;
+}
+
+
+/* COLLECTION */
+
+label {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+input,
+select {
+    min-width: 0;
+    flex: 1;
+    padding: 12px;
+    background: #0b1120;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--blue);
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 22px 0;
+}
+
+.message {
+    min-height: 18px;
+    color: #60a5fa;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+
+/* AUTOMATIC CAPTURE */
+
+.auto-controls {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
+
+.interval-control {
+    width: 180px;
+}
+
+.interval-control input {
+    width: 100%;
+}
+
+
+/* DATASET */
+
+#dataset-list {
+    display: grid;
+    gap: 8px;
+}
+
+.dataset-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #0b1120;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-size: 13px;
+}
+
+.dataset-item strong {
+    color: #60a5fa;
+}
+
+#total {
+    color: #60a5fa;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.empty-state {
+    color: var(--muted);
+    font-size: 12px;
+    padding: 15px 0;
+}
+
+
+/* FOOTER */
+
+footer {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 10px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 650px) {
+
+    .header {
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 12px 4%;
+    }
+
+    .brand {
+        font-size: 18px;
+    }
+
+    .project-title {
+        font-size: 12px;
+    }
+
+    .repo {
+        font-size: 10px;
+    }
+
+    .version {
+        font-size: 10px;
+    }
+
+    main {
+        width: 96%;
+        margin: 12px auto;
+    }
+
+    .panel {
+        padding: 14px;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .video-container {
+        min-height: 200px;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .row button {
+        width: 100%;
+    }
+
+    .auto-controls {
+        flex-wrap: wrap;
+    }
+
+    .interval-control {
+        width: 100%;
+    }
+
+    .camera-footer {
+        flex-direction: column;
+    }
+}

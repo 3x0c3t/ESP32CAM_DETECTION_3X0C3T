@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ESP32CAM DETECTION | 3xØc3t</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<header class="header">
+
+    <a class="brand" href="https://3x0c3t.com/L4B/" target="_blank">
+        -3xØc3t-
+    </a>
+
+    <div class="project-title">
+        ESP32CAM DETECTION
+    </div>
+
+    <a class="repo"
+       href="https://github.com/3x0c3t/ESP32CAM_DETECTION_3X0C3T"
+       target="_blank">
+        REPO ↗
+    </a>
+
+    <span class="version">v0.1.0</span>
+
+</header>
+
+
+<main>
+
+    <!-- CAMERA -->
+
+    <section class="panel camera-panel">
+
+        <div class="section-heading">
+            <h2>CAMERA EN DIRECT</h2>
+
+            <span id="camera-status" class="status offline">
+                DÉCONNECTÉE
+            </span>
+        </div>
+
+        <div class="toolbar">
+
+            <div class="control-group">
+                <span class="control-label">CAMERA</span>
+
+                <button id="camera-on" class="btn btn-success">
+                    ON
+                </button>
+
+                <button id="camera-off" class="btn btn-danger" disabled>
+                    OFF
+                </button>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">FLASH</span>
+
+                <button id="flash-on" class="btn btn-warning" disabled>
+                    ON
+                </button>
+
+                <button id="flash-off" class="btn btn-secondary" disabled>
+                    OFF
+                </button>
+            </div>
+
+        </div>
+
+        <div class="video-container">
+
+            <img id="camera" alt="Flux vidéo ESP32-CAM">
+
+            <div id="camera-placeholder">
+                <span>CAMERA OFFLINE</span>
+                <small>En attente du flux vidéo...</small>
+            </div>
+
+        </div>
+
+        <div class="camera-footer">
+            <span id="connection-info">Connexion en attente</span>
+            <span id="flash-status">FLASH : NON DISPONIBLE</span>
+        </div>
+
+    </section>
+
+
+    <!-- COLLECTE -->
+
+    <section class="panel collection-panel">
+
+        <h2>COLLECTE DES IMAGES</h2>
+
+        <label for="category">CATÉGORIE D'OBJET</label>
+
+        <div class="row">
+
+            <select id="category">
+                <option value="">Sélectionner une catégorie</option>
+            </select>
+
+            <button id="capture" class="btn btn-success">
+                CAPTURER
+            </button>
+
+        </div>
+
+        <div class="row">
+
+            <input
+                id="new-category"
+                type="text"
+                placeholder="Nom de la nouvelle catégorie"
+                maxlength="50"
+            >
+
+            <button id="add-category" class="btn btn-primary">
+                + AJOUTER
+            </button>
+
+        </div>
+
+        <div id="capture-status" class="message"></div>
+
+        <hr>
+
+        <div class="section-heading">
+            <h3>CAPTURE AUTOMATIQUE</h3>
+            <span id="auto-status" class="status offline">ARRÊTÉE</span>
+        </div>
+
+        <div class="auto-controls">
+
+            <div class="interval-control">
+                <label for="interval">INTERVALLE (SECONDES)</label>
+
+                <input
+                    id="interval"
+                    type="number"
+                    min="1"
+                    max="3600"
+                    value="2"
+                >
+            </div>
+
+            <button id="start-auto" class="btn btn-success">
+                DÉMARRER
+            </button>
+
+            <button id="stop-auto" class="btn btn-danger" disabled>
+                ARRÊTER
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- DATASET -->
+
+    <section class="panel dataset-panel">
+
+        <div class="section-heading">
+            <h2>DATASET COLLECTÉ</h2>
+            <span id="total">0 IMAGE</span>
+        </div>
+
+        <div id="dataset-list">
+            <div class="empty-state">
+                Aucune image collectée.
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    ESP32CAM DETECTION · 3xØc3t LAB · v0.1.0
+</footer>
+
+
+<script src="/js/collector.js"></script>
+
+</body>
+</html>

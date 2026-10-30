@@ -1,0 +1,44 @@
+# Secrets
+**/secrets.h
+config/config.json
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Modèles générés
+models/custom/
+runs/
+*.onnx
+*.engine
+
+# Logs et temporaires
+logs/
+*.log
+*.tmp
+
+# Dataset local
+dataset/images/
+dataset/labels/
+
+# IDE et système
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+dataset/raw/
+
+# Donnees locales
+collection/categories.json
+dataset/raw/
+dataset/images/
+dataset/labels/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Configuration locale
+config/config.json
