@@ -28,6 +28,23 @@ async function api(url, options = {}) {
 }
 
 
+/* PARAMETRES AVANCES : ONGLET */
+
+document.querySelectorAll(".settings-tab").forEach(button => {
+    button.addEventListener("click", () => {
+        const tab = button.dataset.tab;
+
+        document.querySelectorAll(".settings-tab").forEach(item => {
+            item.classList.toggle("active", item === button);
+        });
+
+        document.querySelectorAll(".settings-pane").forEach(panel => {
+            panel.classList.toggle("active", panel.id === "tab-" + tab);
+        });
+    });
+});
+
+
 /* CAMERA */
 
 function displayCamera(active) {
@@ -78,33 +95,7 @@ document.getElementById("camera-off").addEventListener(
 );
 
 
-/* FLASH */
-
-async function flashCommand(action) {
-
-    try {
-        await api("/api/flash/" + action, {
-            method: "POST"
-        });
-
-        await refreshStatus();
-
-    } catch (error) {
-        document.getElementById("flash-status").textContent =
-            "FLASH : " + error.message;
-    }
-}
-
-
-document.getElementById("flash-on").addEventListener(
-    "click",
-    () => flashCommand("on")
-);
-
-document.getElementById("flash-off").addEventListener(
-    "click",
-    () => flashCommand("off")
-);
+/* FLASH : contrôle par curseur */
 
 const flashLevel = document.getElementById("flash-level");
 const flashValue = document.getElementById("flash-value");
@@ -193,6 +184,9 @@ async function refreshStatus() {
 
         const data = await api("/api/status");
 
+        updateDetectionUI(data.detection_enabled, data.detection_confidence);
+        updateAdvancedSettingsUI(data);
+
         const connected = data.camera_connected;
 
         cameraStatus.textContent = connected
@@ -220,12 +214,6 @@ async function refreshStatus() {
             flashValue.textContent = flashLevel.value + " %";
         }
         flashLevel.disabled = !data.flash_available;
-
-        document.getElementById("flash-on").disabled =
-            !data.flash_available;
-
-        document.getElementById("flash-off").disabled =
-            !data.flash_available;
 
         updateDataset(data.categories || {});
 
@@ -368,9 +356,151 @@ document.getElementById("stop-auto").addEventListener(
 );
 
 
+
+/* PARAMETRES AVANCES : SYNCHRONISATION */
+
+function updateAdvancedSettingsUI(data) {
+    const fields = {
+        "jpeg-quality": data.jpeg_quality,
+        "imgsz": data.detection_imgsz,
+        "analysis-interval": data.analysis_interval_ms,
+        "max-fps": data.max_fps
+    };
+
+    for (const [id, value] of Object.entries(fields)) {
+        const field = document.getElementById(id);
+        if (field && value !== undefined && document.activeElement !== field) {
+            field.value = value;
+        }
+    }
+
+    const quality = document.getElementById("jpeg-quality");
+    document.getElementById("jpeg-quality-value").textContent = quality.value;
+}
+
+document.getElementById("jpeg-quality").addEventListener("input", event => {
+    document.getElementById("jpeg-quality-value").textContent = event.target.value;
+});
+
+document.getElementById("save-camera-settings").addEventListener("click", async () => {
+    try {
+        await api("/api/camera/config", {
+            method: "POST",
+            body: JSON.stringify({
+                jpeg_quality: Number(document.getElementById("jpeg-quality").value)
+            })
+        });
+        captureStatus.textContent = "Qualite JPEG enregistree.";
+        await refreshStatus();
+    } catch (error) {
+        captureStatus.textContent = "Erreur camera : " + error.message;
+    }
+});
+
+document.getElementById("save-yolo-settings").addEventListener("click", async () => {
+    try {
+        const data = await api("/api/detection", {
+            method: "POST",
+            body: JSON.stringify({
+                enabled: detectionEnabled,
+                confidence: Number(confidenceLevel.value) / 100,
+                imgsz: Number(document.getElementById("imgsz").value)
+            })
+        });
+        updateDetectionUI(data.detection_enabled, data.detection_confidence);
+        captureStatus.textContent = "Parametres YOLO enregistres.";
+        await refreshStatus();
+    } catch (error) {
+        captureStatus.textContent = "Erreur YOLO : " + error.message;
+    }
+});
+
+document.getElementById("save-performance-settings").addEventListener("click", async () => {
+    try {
+        await api("/api/detection", {
+            method: "POST",
+            body: JSON.stringify({
+                analysis_interval_ms: Number(document.getElementById("analysis-interval").value)
+            })
+        });
+
+        await api("/api/camera/config", {
+            method: "POST",
+            body: JSON.stringify({
+                max_fps: Number(document.getElementById("max-fps").value)
+            })
+        });
+
+        captureStatus.textContent = "Parametres de performances enregistres.";
+        await refreshStatus();
+    } catch (error) {
+        captureStatus.textContent = "Erreur performances : " + error.message;
+    }
+});
+
+
 /* INITIALISATION */
 
 displayCamera(false);
 refreshStatus();
 
 setInterval(refreshStatus, 2000);
+
+/* DETECTION YOLO */
+
+const detectionToggle = document.getElementById("detection-toggle");
+const detectionStatus = document.getElementById("detection-status");
+const confidenceLevel = document.getElementById("confidence-level");
+const confidenceValue = document.getElementById("confidence-value");
+
+let detectionEnabled = false;
+
+function updateDetectionUI(enabled, confidence) {
+    detectionEnabled = Boolean(enabled);
+    detectionToggle.textContent = detectionEnabled ? "DÉSACTIVER" : "ACTIVER";
+    detectionToggle.className = detectionEnabled ? "btn btn-danger" : "btn btn-success";
+    detectionStatus.textContent = detectionEnabled ? "ACTIVÉE" : "DÉSACTIVÉE";
+    detectionStatus.className = detectionEnabled ? "status online" : "status offline";
+
+    if (document.activeElement !== confidenceLevel && confidence !== undefined) {
+        confidenceLevel.value = Math.round(Number(confidence) * 100);
+        confidenceValue.textContent = confidenceLevel.value + " %";
+    }
+}
+
+async function refreshDetectionStatus() {
+    try {
+        const data = await api("/api/status");
+        updateDetectionUI(data.detection_enabled, data.detection_confidence);
+    } catch (error) {
+        detectionStatus.textContent = "INDISPONIBLE";
+        detectionStatus.className = "status offline";
+    }
+}
+
+async function configureDetection(enabled = detectionEnabled) {
+    const confidence = Number(confidenceLevel.value) / 100;
+
+    try {
+        const data = await api("/api/detection", {
+            method: "POST",
+            body: JSON.stringify({ enabled, confidence })
+        });
+        updateDetectionUI(data.detection_enabled, data.detection_confidence);
+    } catch (error) {
+        captureStatus.textContent = "Erreur YOLO : " + error.message;
+        refreshDetectionStatus();
+    }
+}
+
+detectionToggle.addEventListener("click", () => {
+    configureDetection(!detectionEnabled);
+});
+
+confidenceLevel.addEventListener("input", () => {
+    confidenceValue.textContent = confidenceLevel.value + " %";
+});
+
+confidenceLevel.addEventListener("change", () => {
+    configureDetection();
+});

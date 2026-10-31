@@ -62,14 +62,6 @@
 
             <div class="control-group">
                 <span class="control-label">FLASH</span>
-
-                <button id="flash-on" class="btn btn-warning" disabled>
-                    ON
-                </button>
-
-                <button id="flash-off" class="btn btn-secondary" disabled>
-                    OFF
-                </button>
                 <div class="flash-slider">
                     <input id="flash-level" type="range" min="0" max="100" value="0">
                     <output id="flash-value">0 %</output>
@@ -93,6 +85,8 @@
             <span id="connection-info">Connexion en attente</span>
             <span id="flash-status">FLASH : ÉTEINT</span>
         </div>
+
+
 
     </section>
 
@@ -170,7 +164,43 @@
 
     <!-- DATASET -->
 
-    <section class="panel dataset-panel">
+    <section class="panel advanced-panel">
+<div class="section-heading"><h2>PARAMETRES AVANCES</h2></div>
+<div class="settings-tabs">
+<button class="settings-tab active" data-tab="camera">CAMERA</button>
+<button class="settings-tab" data-tab="yolo">YOLO</button>
+<button class="settings-tab" data-tab="performance">PERFORMANCES</button>
+</div>
+<div class="settings-content">
+<div class="settings-pane active" id="tab-camera">
+<div class="setting-row"><label for="jpeg-quality">QUALITE JPEG</label><input id="jpeg-quality" type="range" min="30" max="100" value="80"><output id="jpeg-quality-value">80</output></div>
+<button id="save-camera-settings" class="btn btn-success">APPLIQUER</button>
+</div>
+<div class="settings-pane" id="tab-yolo">
+<div class="detection-controls">
+            <div class="control-group">
+                <span class="control-label">DÉTECTION YOLO</span>
+                <button id="detection-toggle" class="btn btn-success">ACTIVER</button>
+                <span id="detection-status" class="status offline">DÉSACTIVÉE</span>
+            </div>
+            <div class="control-group confidence-control">
+                <label for="confidence-level">CONFIANCE</label>
+                <input id="confidence-level" type="range" min="5" max="95" value="45">
+                <output id="confidence-value">45 %</output>
+            </div>
+        </div>
+<div class="setting-row"><label for="imgsz">RESOLUTION YOLO</label><input id="imgsz" type="number" min="160" max="1280" step="32" value="640"></div>
+<button id="save-yolo-settings" class="btn btn-success">APPLIQUER</button>
+</div>
+<div class="settings-pane" id="tab-performance">
+<div class="setting-row"><label for="analysis-interval">INTERVALLE ANALYSE (ms)</label><input id="analysis-interval" type="number" min="0" max="10000" step="100" value="0"></div>
+<div class="setting-row"><label for="max-fps">FPS MAXIMUM</label><input id="max-fps" type="number" min="1" max="60" value="15"></div>
+<button id="save-performance-settings" class="btn btn-success">APPLIQUER</button>
+</div>
+</div>
+</section>
+
+<section class="panel dataset-panel">
 
         <div class="section-heading">
             <h2>DATASET COLLECTÉ</h2>

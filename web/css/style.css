@@ -130,16 +130,18 @@ h3 {
 
 .toolbar {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 15px;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 12px;
+    width: 100%;
     margin-bottom: 15px;
 }
 
 .control-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
+    white-space: nowrap;
 }
 
 .control-label {
@@ -384,8 +386,41 @@ footer {
     }
 
     .toolbar {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        overflow-x: auto;
+    }
+
+    .control-group {
+        gap: 4px;
+        flex-shrink: 0;
+    }
+
+    .control-label {
+        font-size: 9px;
+        margin-right: 2px;
+    }
+
+    .btn {
+        padding: 5px 8px;
+        font-size: 10px;
+        min-height: 28px;
+    }
+
+    .flash-slider {
+        min-width: 0;
+        gap: 4px;
+    }
+
+    #flash-level {
+        width: 75px;
+    }
+
+    #flash-value {
+        min-width: 28px;
+        font-size: 10px;
     }
 
     .video-container {
@@ -433,4 +468,167 @@ footer {
     color: var(--text);
     font-size: 12px;
     font-weight: bold;
+}
+
+/* CONTROLES DETECTION YOLO */
+.detection-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    margin-top: 10px;
+    background: var(--surface, #1e293b);
+    border: 1px solid var(--border, #334155);
+    border-radius: 8px;
+}
+
+.detection-controls .control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detection-controls .control-label,
+.detection-controls label {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#confidence-level {
+    width: 130px;
+    accent-color: #22c55e;
+    cursor: pointer;
+}
+
+#confidence-value {
+    min-width: 38px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: right;
+}
+
+#detection-status {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .detection-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .detection-controls .control-group {
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    #confidence-level {
+        flex: 1;
+        min-width: 80px;
+    }
+}
+
+
+/* PARAMETRES AVANCES */
+.advanced-panel {
+    margin-top: 16px;
+}
+
+.settings-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0;
+    border-bottom: 1px solid var(--border, #334155);
+}
+
+.settings-tab {
+    padding: 10px 16px;
+    background: transparent;
+    color: var(--text, #e2e8f0);
+    border: 0;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.settings-tab:hover {
+    background: var(--surface, #1e293b);
+}
+
+.settings-tab.active {
+    color: #22c55e;
+    border-bottom-color: #22c55e;
+}
+
+.settings-pane {
+    display: none;
+    padding: 12px 0;
+}
+
+.settings-pane.active {
+    display: block;
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.setting-row label {
+    min-width: 180px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.setting-row input[type="range"] {
+    flex: 1;
+    min-width: 120px;
+    accent-color: #22c55e;
+    cursor: pointer;
+}
+
+.setting-row input[type="number"] {
+    width: 110px;
+    padding: 8px;
+    color: var(--text, #e2e8f0);
+    background: var(--surface, #1e293b);
+    border: 1px solid var(--border, #334155);
+    border-radius: 6px;
+}
+
+.setting-row output {
+    min-width: 45px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .settings-tabs {
+        gap: 2px;
+    }
+
+    .settings-tab {
+        flex: 1;
+        padding: 10px 5px;
+        font-size: 10px;
+    }
+
+    .setting-row {
+        gap: 10px;
+    }
+
+    .setting-row label {
+        width: 100%;
+    }
+
+    .setting-row input[type="range"] {
+        min-width: 100px;
+    }
 }

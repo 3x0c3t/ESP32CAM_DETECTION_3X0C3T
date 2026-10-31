@@ -1,3 +1,15 @@
 {
-    "camera_url": "http://192.168.43.128:81/stream"
+    "camera_url": "http://192.168.43.128:81/stream",
+    "camera": {
+        "jpeg_quality": 80
+    },
+    "detection": {
+        "enabled": false,
+        "confidence": 0.45,
+        "imgsz": 640
+    },
+    "performance": {
+        "analysis_interval_ms": 0,
+        "max_fps": 15
+    }
 }
